@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html ng-app="mapp">
+<head>
+<script src="lib/angular/angular.min.js"></script>
+<style>
+#slide{
+	width: 200px;
+	height: 200px;
+	overflow: hidden;
+	position: relative;
+}
+#slideshow ul{
+	margin: 0px;
+	padding:0px;
+}
+
+#slideshow li{
+	list-style: none;
+	height: 200px;
+	width: 200px;
+}
+#slideshow img{
+	max-height: 200px;
+	max-width: 200px;
+}
+
+</style>
+</head>
+<body>
+<div ng-controller="mappC">
+<div id="slide">
+<div id="slideshow">
+<ul id="ui">
+<li><img src="a.jpg"></li>
+<li><img src="b.jpg"></li>
+<li><img src="c.jpg"></li>
+
+
+</ul>
+
+
+</div>
+</div>
+
+		<button ng-click="add()">take
+			picture</button></div>
+<script src="lib/angular/angular.min.js"></script>
+
+<script >
+angular.module("mapp",[]).controller("mappC", function($scope){
+$scope.titulo="My App";
+ function($scope) {	var i=1;
+	$scope.next=function(){
+		var lenght=document.getElementById("ui").children.length;
+if(i<lenght){
+	var top =i*200;
+	document.getElementById("slideshow").style.marginTop="-"+top+"px";
+	i++;
+}
+
+	}
+	$scope.add()
+{
+alert("ddd");}
+
+});
+</script>
+</body>
+</html>

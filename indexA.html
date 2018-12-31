@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html ng-app="mapp">
+<head>
+	<title>AngularJs</title>
+	    <link rel="stylesheet" type="text/css" href="lib/angular/materialize.min.css">
+
+
+</head>
+<body ng-controller="mappC">
+<header>
+<h2>{{titulo}}</h2>
+</header>
+
+Nome <input type="text" placeholder="Nome" ng-model="Aluno.nome"/><br/><br/>
+Email <input type="text" ng-model="Aluno.email"/><br/><br/>
+
+Nota1 <input type="text" ng-model="Aluno.nota1"/><br/><br/>
+Nota2 <input type="text" ng-model="Aluno.nota2"/><br/><br/>
+Nota3 <input type="text" ng-model="Aluno.nota3"/><br/><br/>
+
+<button ng-click="add(Aluno)">Adicionar</button>
+{{Aluno}}
+
+
+<br/>
+<br/>
+<br/>
+ <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
+
+  <!-- Modal Structure -->
+  <div id="modal1" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h4>Modal Header</h4>
+      <p>A bunch of text</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+    </div>
+  </div>
+ 
+<input type="text" ng-model="busca.nome"><br/><br/>
+<table><thead>
+<tr>
+<th>Nome</th>
+<th>Email</th>
+<th>Nota1</th>
+<th>Nota2</th>
+<th>Nota3</th>
+<th>Media</th>
+<th>Accoes</th>
+
+
+</tr>
+</thead>
+<tbody>
+<tr ng-repeat="aluno in alunos | filter:busca">
+<td>{{aluno.nome}}</td>
+<td>{{aluno.email}}</td>
+<td>{{aluno.nota1}}</td>
+<td>{{aluno.nota2}}</td>
+<td>{{aluno.nota3}}</td>
+<td>{{aluno.media}}</td>
+<td><button ng-click="editar(aluno)">Editar</button></td>
+<td><button ng-click="delete(aluno)">Deletar</button></td>
+<td><button ng-click="remove()">Rem</button></td>
+
+
+
+ </tr>
+
+</tbody>
+
+</table>
+<br>
+ <!-- Modal Trigger -->
+   
+<script src="lib/angular/angular.min.js"></script>
+<script src="lib/angular/jquery.js"></script>
+<script src="lib/angular/mat.js"></script>
+
+
+<script type="" >
+ $(document).ready(function(){
+    $('.modal').modal();
+  });       
+</script>
+<script >
+angular.module("mapp",[]).controller("mappC", function($scope){
+$scope.titulo="My App";
+ var _video = null,
+        patData = null;
+
+    $scope.patOpts = {x: 0, y: 0, w: 30, h: 25};
+
+    // Setup a channel to receive a video property
+    // with a reference to the video element
+    // See the HTML binding in main.html
+    $scope.channel = {};
+
+    $scope.webcamError = false;
+    $scope.onError = function (err) {
+        $scope.$apply(
+            function() {
+                $scope.webcamError = err;
+            }
+        );
+    };
+
+    $scope.onSuccess = function () {
+        // The video element contains the captured camera data
+        _video = $scope.channel.video;
+        $scope.$apply(function() {
+            $scope.patOpts.w = _video.width;
+            $scope.patOpts.h = _video.height;
+            //$scope.showDemos = true;
+        });
+    };
+
+    $scope.onStream = function (stream) {
+        // You could do something manually with the stream.
+    };
+
+	$scope.makeSnapshot = function() {
+        if (_video) {
+            var patCanvas = document.querySelector('#snapshot');
+            if (!patCanvas) return;
+
+            patCanvas.width = _video.width;
+            patCanvas.height = _video.height;
+            var ctxPat = patCanvas.getContext('2d');
+
+            var idata = getVideoData($scope.patOpts.x, $scope.patOpts.y, $scope.patOpts.w, $scope.patOpts.h);
+            ctxPat.putImageData(idata, 0, 0);
+
+            sendSnapshotToServer(patCanvas.toDataURL());
+
+            patData = idata;
+        }
+    };
+    
+    /**
+     * Redirect the browser to the URL given.
+     * Used to download the image by passing a dataURL string
+     */
+    $scope.downloadSnapshot = function downloadSnapshot(dataURL) {
+        window.location.href = dataURL;
+    };
+    
+    var getVideoData = function getVideoData(x, y, w, h) {
+        var hiddenCanvas = document.createElement('canvas');
+        hiddenCanvas.width = _video.width;
+        hiddenCanvas.height = _video.height;
+        var ctx = hiddenCanvas.getContext('2d');
+        ctx.drawImage(_video, 0, 0, _video.width, _video.height);
+        return ctx.getImageData(x, y, w, h);
+    };
+
+    /**
+     * This function could be used to send the image data
+     * to a backend server that expects base64 encoded images.
+     *
+     * In this example, we simply store it in the scope for display.
+     */
+    var sendSnapshotToServer = function sendSnapshotToServer(imgBase64) {
+        $scope.snapshotData = imgBase64;
+    };
+$scope.add=function(Aluno)
+{Aluno.media=media(Aluno);
+
+
+$scope.alunos.push(Aluno);
+$scope.Aluno={nome:"",
+email:"", 
+nota1:'',
+nota2:'',
+nota3:''};
+
+alert(Aluno.nome);
+};
+
+$scope.alunos=[
+{nome:"sotelio",email:"S@S", nota1:"21",nota2:"23",nota3:"32"},
+{nome:"Stelio",email:"S@S", nota1:"21",nota2:"23",nota3:"32"},
+{nome:"Stelio",email:"S@S", nota1:"21",nota2:"23",nota3:"45"},
+];
+
+
+$scope.editar=function(aluno){
+	$scope.Aluno=aluno;
+};
+
+var init=function(){
+	$scope.alunos.forEach(function(aluno){
+aluno.media=media(aluno);
+	});
+};
+$scope.delete=function(aluno){
+for(index in $scope.alunos){
+	var aux=$scope.alunos[index];
+	if(aluno===aux){
+		$scope.alunos.splice(index,2);
+	}
+}	
+};
+$scope.remove=function(){ 
+	var item={};
+      var index=$scope.alunos.indexOf(item)
+     
+	 $scope.alunos.splice(index,1);     
+    }
+	
+var media=function(Aluno){
+	var media=(Aluno.nota1+Aluno.nota2+Aluno.nota3)/3
+	return media.toFixed(2);
+};
+init();
+});
+
+<label>Departamento: <select class="form-control"
+									data-ng-model="prestacao.departamento.id">
+										<option data-ng-repeat="dep in departamentos"
+											value="{{dep.id}}">{{dep.descricao}}</option>
+								</select>
+								</label>
+</script>
+</body>
+</html>
